@@ -91,47 +91,47 @@ class ShortcutCreator(object):
         content = "[Desktop Entry]"
         # Name - String
         if n1 != "":
-            content += "\nName="+n1
+            content += "\nName=" + n1
         # Version - String
         if v1 != "":
-            content += "\nVersion="+v1
+            content += "\nVersion=" + v1
         # Exec - e1 e2 e3 or any combination between them
         # example: Exec=python /mnt/extension/python/script.py -debug (e1 e2 e3)
         # example: Exec=/home/myuser/application/app.bin (e2 only)
         # example: Exec=gksudo nautilus (e1 and e3, or only e1, or only e3)
         if e1 != "":
-            content += "\nExec="+e1
+            content += "\nExec=" + e1
             if e2 is not None:
-                content += " "+e2
+                content += " " + str(e2).replace(" ", "\\ ")
                 if e3 != "":
-                    content += " "+e3
+                    content += " " + e3
             else:
                 if e3 != "":
-                    content += " "+e3
+                    content += " " + e3
         else:
             if e2 is not None:
-                content += "\nExec="+e2
+                content += "\nExec=" + str(e2).replace(" ", "\\ ")
                 if e3 != "":
-                    content += " "+e3
+                    content += " " + e3
             else:
                 if e3 != "":
-                    content += "\nExec="+e3
+                    content += "\nExec=" + e3
         if p1 is not None:
-            content += "\nPath="+p1
+            content += "\nPath=" + p1
         if i1 is not None:
-            content += "\nIcon="+i1
+            content += "\nIcon=" + i1
         if t1 != "":
-            content += "\nType="+t1
+            content += "\nType=" + t1
         # StartupNotify
-        content += "\nStartupNotify="+str(s1).lower()
+        content += "\nStartupNotify=" + str(s1).lower()
         # Terminal
-        content += "\nTerminal="+str(t2).lower()
+        content += "\nTerminal=" + str(t2).lower()
         if c1 != "":
-            content += "\nCategories="+c1
+            content += "\nCategories=" + c1
         if c2 != "":
-            content += "\nComments="+c2
+            content += "\nComments=" + c2
 
-        print("\nFILE CONTENT:\n\n"+content)
+        print("\nFILE CONTENT:\n\n" + content)
 
         return content
     
@@ -143,7 +143,7 @@ class ShortcutCreator(object):
                 shortcut = open(os.path.expanduser(desktoppath)+filename+".desktop", "w")
                 shortcut.write(content)
                 shortcut.close()
-                os.chmod(os.path.expanduser(desktoppath) + filename + ".desktop", 750)
+                os.chmod(os.path.expanduser(desktoppath) + filename + ".desktop", 0o750)
                 messagecontrol += 1
             except Exception:
                 self.errormessage(self.ERROR_DESKTOP, "There was one or more errors. The file may have not been "
@@ -156,7 +156,7 @@ class ShortcutCreator(object):
                 shortcut = open(os.path.expanduser(dashboardpath)+filename+".desktop", "w")
                 shortcut.write(content)
                 shortcut.close()
-                os.chmod(os.path.expanduser(dashboardpath) + filename + ".desktop", 750)
+                os.chmod(os.path.expanduser(dashboardpath) + filename + ".desktop", 0o750)
                 messagecontrol += 2
             except Exception:
                 self.errormessage(self.ERROR_DASHBOARD, "There was one or more errors. The file may have not been "
@@ -184,7 +184,7 @@ class ShortcutCreator(object):
 
     def get_desktop_directory(self):
         try:
-            desktoppath = None
+            desktoppath = str()
             user_dirs = open(os.path.expanduser("~/.config/user-dirs.dirs"), "r")
             for line in user_dirs:
                 if line.find("XDG_DESKTOP_DIR=") != -1:
